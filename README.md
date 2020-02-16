@@ -11,4 +11,8 @@ An ASI Loader plugin which allows Daemon X Machina to run on Ultrawide displays,
 4. The compiled ASI plugin should be in "Binaries\Win64"
 
 ## Download
-Coming Soon...
+[Latest version can be downloaded here.](https://ci.appveyor.com/api/buildjobs/6cac65g6m3f20yiw/artifacts/Binaries%2F21xMachi9_Win64_Build-Release.zip
+)
+Development has just begun, so most functionality is missing.
+
+ASI Loader is not included at the moment, but including it with the download is planned.
