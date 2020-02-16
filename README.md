@@ -25,6 +25,6 @@ ASI Loader is not included at the moment, but including it with the download is 
 ## Legal Stuff
 **21xMachi9 (C) 2020 Bryce "BesuBaru" Q.**
 
-**This Software is free, and licensed under the GNU General Public License. You can redistribute it, and/or modify it under those terms, Version 3 or later.**
+**21xMachi9 is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.**
 
-**For more information, [please read the license.](https://github.com/BesuBaru/21xMachi9/blob/master/LICENSE)**
+**21xMachi9 is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. [See the GNU General Public License for more details.](https://github.com/BesuBaru/21xMachi9/blob/master/LICENSE)**
