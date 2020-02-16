@@ -9,10 +9,14 @@ DWORD fpsAddress = 0x04593398;
 
 void StartPatch()
 {
-    AllocConsole(); // Adds console window for testing purposes
+    #if defined _DEBUG // Checks if the project build is Debug release.
+        AllocConsole(); // Adds console window for testing purposes
+        freopen_s((FILE**)stdout, "CONOUT$", "w", stdout); // Allows us to add outputs to the ASI Loader Console Window.
+        cout << "21xMachi9 Loaded!" << endl; // Tells us that the ASI Plugin loaded successfully.
+    #endif // Hides the debug window on Release builds.
     //Sleep(2000);
-    *(float*)fovAddress = 0.0116563337; // Changes vertical field of view
-    *(float*)fpsAddress = 9999; // Changes Max Framerate
+    *(float*)fovAddress = 0.0116563337; // Changes vertical field of view.
+    *(float*)fpsAddress = 9999; // Changes Max Framerate.
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
