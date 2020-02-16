@@ -21,3 +21,10 @@ Copy the plugins folder and dsound.dll (ASI Loader) into the **"\DXM\Binaries\Wi
 Development has just begun, so most functionality is missing.
 
 ASI Loader is not included at the moment, but including it with the download is planned.
+
+## Legal Stuff
+**21xMachi9 (C) 2020 Bryce "BesuBaru" Q.**
+
+**This Software is free, and licensed under the GNU General Public License. You can redistribute it, and/or modify it under those terms, Version 3 or later.**
+
+**For more information, [please read the license.](https://github.com/BesuBaru/21xMachi9/blob/master/LICENSE)**
