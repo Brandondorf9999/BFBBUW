@@ -45,7 +45,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <OutDir>$(SolutionDir)\Binaries\Win64\</OutDir>
+    <OutDir>$(SolutionDir)\Binaries\Win64\plugins</OutDir>
     <IntDir>$(SolutionDir)\Intermediate\Win64\$(Configuration)\</IntDir>
     <TargetName>$(ProjectName)_$(Configuration)_Win64</TargetName>
     <TargetExt>.asi</TargetExt>
@@ -53,7 +53,7 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <TargetExt>.asi</TargetExt>
-    <OutDir>$(SolutionDir)\Binaries\Win64\</OutDir>
+    <OutDir>$(SolutionDir)\Binaries\Win64\plugins</OutDir>
     <TargetName>$(ProjectName)_$(Configuration)_Win64</TargetName>
     <IntDir>$(SolutionDir)\Intermediate\Win64\$(Configuration)\</IntDir>
   </PropertyGroup>
@@ -92,6 +92,13 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
     </Link>
+    <PostBuildEvent>
+      <Command>cd $(SolutionDir)\Binaries\Win64\plugins
+
+del *.pdb
+del *.ipdb
+del *.iobj</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\dllmain.cpp" />
