@@ -19,7 +19,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <fstream>
-#include "ThirdParty/inipp/inipp/inipp.h"
+#include "../Source/ThirdParty/inipp/inipp/inipp.h"
 
 using namespace std;
 
