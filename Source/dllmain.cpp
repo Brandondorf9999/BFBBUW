@@ -21,8 +21,6 @@
 #include <iostream>
 #include <fstream>
 
-using namespace std;
-
 DWORD fovAddress = 0x2CD03B0;
 DWORD fpsAddress = 0x04593398;
 int tMaxFPS;
@@ -33,7 +31,7 @@ void createConsole()
 {
     AllocConsole(); // Adds console window for testing purposes
     freopen_s((FILE**)stdout, "CONOUT$", "w", stdout); // Allows us to add outputs to the ASI Loader Console Window.
-    cout << "21xMachi9 Loaded!" << endl; // Tells us that the ASI Plugin loaded successfully.
+    std::cout << "21xMachi9 Loaded!" << std::endl; // Tells us that the ASI Plugin loaded successfully.
 }
 
 void parseIni() //Parses settings from the config.ini file
@@ -43,7 +41,7 @@ void parseIni() //Parses settings from the config.ini file
     config.parse(is); // if so, the config.ini will be parsed.
     config.generate(std::cout);
     config.default_section(config.sections["Settings"]);
-    config.generate(std::cout);
+    config.interpolate();
     if (!debugBuild) // Checks if project build is Release, since creating another consoleWindow in Debug is redundant.
     {
         inipp::extract(config.sections["DebugSettings"]["ConsoleWindow"], consoleWindow);
@@ -53,7 +51,7 @@ void parseIni() //Parses settings from the config.ini file
         }
     }
     inipp::extract(config.sections["Settings"]["t.MaxFPS"], tMaxFPS); // Grabs t.MaxFPS from config.ini
-    cout << "tMaxFPS = " << tMaxFPS << endl; // Displays the ini's current framerate value
+    std::cout << "tMaxFPS = " << tMaxFPS << std::endl; // Displays the ini's current framerate value
 }
 
 void StartPatch()
