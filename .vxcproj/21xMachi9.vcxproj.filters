@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="ThirdParty">
+      <UniqueIdentifier>{0b2220c8-474f-4aac-86f3-08f6938fc0f7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\Inipp">
+      <UniqueIdentifier>{1fe5e3a2-00b4-419b-acb8-0d253cd489db}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\dllmain.cpp">
@@ -28,6 +34,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\pch.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\inipp\inipp\inipp.h">
+      <Filter>ThirdParty\Inipp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
