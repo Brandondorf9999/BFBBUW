@@ -33,6 +33,5 @@
 
 # Project Specific Ignores
 Intermediate/
-Binaries/
 *.asi
 .vs/
