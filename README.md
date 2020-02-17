@@ -20,7 +20,7 @@ Copy the plugins folder and dsound.dll (ASI Loader) into the **"\DXM\Binaries\Wi
 )
 Development has just begun, so most functionality is missing.
 
-ASI Loader is not included at the moment, but including it with the download is planned.
+The Download includes the latest version of [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader).
 
 ## Legal Stuff
 **21xMachi9 (C) 2020 Bryce "BesuBaru" Q.**
