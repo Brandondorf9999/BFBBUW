@@ -35,3 +35,5 @@
 Intermediate/
 *.asi
 .vs/
+Binaries/Win64/plugins/21xMachi9_Debug_Win64.pdb
+Binaries/Win64/plugins/21xMachi9_Debug_Win64.ilk

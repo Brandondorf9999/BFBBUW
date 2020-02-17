@@ -16,10 +16,10 @@
 **/
 
 #include "../Source/pch.h"
+#include "../Source/ThirdParty/inipp/inipp/inipp.h"
 #include <Windows.h>
 #include <iostream>
 #include <fstream>
-#include "../Source/ThirdParty/inipp/inipp/inipp.h"
 
 using namespace std;
 
