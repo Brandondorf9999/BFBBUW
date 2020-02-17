@@ -111,6 +111,13 @@ del *.iobj</Command>
     <ClInclude Include="..\Source\framework.h" />
     <ClInclude Include="..\Source\pch.h" />
     <ClInclude Include="..\Source\ThirdParty\inipp\inipp\inipp.h" />
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\DelimStringReader.h" />
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\LateStaticInit.h" />
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\MemoryMgr.GTA.h" />
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\MemoryMgr.h" />
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\ModuleList.hpp" />
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\Patterns.h" />
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\Trampoline.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

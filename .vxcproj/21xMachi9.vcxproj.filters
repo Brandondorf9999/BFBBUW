@@ -16,7 +16,10 @@
     <Filter Include="ThirdParty">
       <UniqueIdentifier>{0b2220c8-474f-4aac-86f3-08f6938fc0f7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ThirdParty\Inipp">
+    <Filter Include="ThirdParty\ModUtils">
+      <UniqueIdentifier>{34e6096e-97e7-4d60-9847-7031090c7445}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ThirdParty\IniPP">
       <UniqueIdentifier>{1fe5e3a2-00b4-419b-acb8-0d253cd489db}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -36,7 +39,28 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\Source\ThirdParty\inipp\inipp\inipp.h">
-      <Filter>ThirdParty\Inipp</Filter>
+      <Filter>ThirdParty\IniPP</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\DelimStringReader.h">
+      <Filter>ThirdParty\ModUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\LateStaticInit.h">
+      <Filter>ThirdParty\ModUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\MemoryMgr.GTA.h">
+      <Filter>ThirdParty\ModUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\MemoryMgr.h">
+      <Filter>ThirdParty\ModUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\ModuleList.hpp">
+      <Filter>ThirdParty\ModUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\Patterns.h">
+      <Filter>ThirdParty\ModUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\ModUtils\Trampoline.h">
+      <Filter>ThirdParty\ModUtils</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
