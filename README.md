@@ -1,5 +1,5 @@
 # 21xMachi9 (Daemon X Machina Ultrawide Fix)
-[![Build status](https://ci.appveyor.com/api/projects/status/4337wbguqe28173v/branch/master?svg=true)](https://ci.appveyor.com/project/BesuBaru/21xMachi9/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/4337wbguqe28173v/branch/master?svg=true)](https://ci.appveyor.com/project/KingKrouch/21xMachi9/branch/master)
 
 ## About
 An ASI Loader plugin which allows Daemon X Machina to run on Ultrawide displays, and with even higher framerates.
@@ -16,8 +16,7 @@ Copy the plugins folder and dsound.dll (ASI Loader) into the **"\DXM\Binaries\Wi
 *Note: If you don't have any other Steam library locations set up, this will likely be **"C:\Program Files (x86)\Steam\SteamApps\Common\DaemonXMachina"**.*
 
 ## Download (For novices)
-[Latest version can be downloaded here.](https://ci.appveyor.com/api/buildjobs/6cac65g6m3f20yiw/artifacts/Binaries%2F21xMachi9_Win64_Build-Release.zip
-)
+[Latest version can be downloaded here.](https://ci.appveyor.com/api/buildjobs/6cac65g6m3f20yiw/artifacts/Binaries%2F21xMachi9_Win64_Build-Release.zip)
 Development has just begun, so most functionality is missing.
 
 Download includes the latest version of [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader).
