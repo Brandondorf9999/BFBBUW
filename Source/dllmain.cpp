@@ -45,17 +45,17 @@ static void UnprotectModule(HMODULE p_Module)
 
 void createConsole()
 {
-    AllocConsole(); // Adds console window for testing purposes
+    AllocConsole(); // Adds console window for testing purposes.
     freopen("CONOUT$", "w", stdout); // Allows us to add outputs to the ASI Loader Console Window.
     std::cout.clear();
     std::cin.clear();
     std::cout << "21xMachi9 Loaded!" << std::endl; // Tells us that the ASI Plugin loaded successfully.
 }
 
-void parseIni() //Parses settings from the config.ini file
+void parseIni() //Parses settings from the config.ini file.
 {
-    inipp::Ini<char> config; // Creates Inipp reference
-    std::ifstream is("config.ini"); // Checks for config.ini
+    inipp::Ini<char> config; // Creates Inipp reference.
+    std::ifstream is("config.ini"); // Checks for config.ini.
     config.parse(is); // if so, the "config.ini" will be parsed.
     config.generate(std::cout);
     config.default_section(config.sections["Settings"]);
@@ -68,7 +68,7 @@ void parseIni() //Parses settings from the config.ini file
             createConsole();
         }
     }
-    inipp::extract(config.sections["Settings"]["t.MaxFPS"], tMaxFPS); // Grabs "t.MaxFPS" from config.ini
+    inipp::extract(config.sections["Settings"]["t.MaxFPS"], tMaxFPS); // Grabs "t.MaxFPS" from config.ini.
 }
 
 // Get the horizontal and vertical screen sizes in pixel
@@ -88,48 +88,57 @@ void GetDesktopResolution(int& horizontal, int& vertical)
 
 void FOVCalc()
 {
-    // Declare the Vertical and Horizoontal Resolution variables
+    // Declare the Vertical and Horizoontal Resolution variables.
     int hRes = 0;
     int vRes = 0;
 
-    // Declares the original 16:9 Vert- FOV
+    // Declares the original 16:9 Vert- FOV.
     float originalFOV = 0.008726646192;
     float originalAspectRatio = 1.777777777777778;
 
-    // Checks for GameUserSettings.ini
+    // Checks for GameUserSettings.ini.
     GetFileAttributes("%LOCALAPPDATA%\\DXM\\Saved\\Config\\WindowsNoEditor\\GameUserSettings.ini");
     if (INVALID_FILE_ATTRIBUTES == GetFileAttributes("%LOCALAPPDATA%\\DXM\\Saved\\Config\\WindowsNoEditor\\GameUserSettings.ini") && GetLastError() == ERROR_FILE_NOT_FOUND)
     {
         //GameUserSettings.ini not found.
-        HWND hwndWindow = FindWindow(NULL, TEXT("DaemonXMachina")); // Check for main process window
-        if (hwndWindow != 0) // if the window exists
+        std::cout << "ERROR: GameUserSettings.ini not found! Falling back to check game process resolution." << std::endl;
+        HWND hwndWindow = FindWindow(NULL, TEXT("DaemonXMachina")); // Check for main process window.
+        if (hwndWindow != 0) // if the window exists.
         {
-            // Get Window Size
+            std::cout << "Falling back to game process resolution." << std::endl;
+
+            // Get Window Size.
             RECT gameWindow;
             GetWindowRect(hwndWindow, &gameWindow);
             hRes = gameWindow.right;
             vRes = gameWindow.bottom;
+            std::cout << "Resolution:" << hRes << "x" << vRes << std::endl;
         }
         else
         {
-            // Get desktop resolution
+            std::cout << "ERROR: game process resolution not found! Falling back to desktop resolution." << std::endl;
+
+            // Get desktop resolution.
             GetDesktopResolution(hRes, vRes);
+            std::cout << "Resolution:" << hRes << "x" << vRes << std::endl;
         }
     }
     else
     {
         // GameUserSettings.ini found.
-        inipp::Ini<char> GameUserSettings; // Creates Inipp reference
-        std::ifstream is("%LOCALAPPDATA%\\DXM\\Saved\\Config\\WindowsNoEditor\\GameUserSettings.ini"); // Checks for GameUserSettings.ini
+        inipp::Ini<char> GameUserSettings; // Creates Inipp reference.
+        std::ifstream is("%LOCALAPPDATA%\\DXM\\Saved\\Config\\WindowsNoEditor\\GameUserSettings.ini"); // Checks for GameUserSettings.ini.
         GameUserSettings.parse(is); // if so, the "GameUserSettings.ini" will be parsed.
         GameUserSettings.generate(std::cout);
         GameUserSettings.default_section(GameUserSettings.sections["/Script/Engine.GameUserSettings"]);
         GameUserSettings.interpolate();
-        inipp::extract(GameUserSettings.sections["/Script/Engine.GameUserSettings"]["ResolutionSizeX"], hRes); // Grabs "ResolutionSizeX" from GameUserSettings.ini
-        inipp::extract(GameUserSettings.sections["/Script/Engine.GameUserSettings"]["ResolutionSizeY"], vRes); // Grabs "ResolutionSizeY" from GameUserSettings.ini
+        inipp::extract(GameUserSettings.sections["/Script/Engine.GameUserSettings"]["ResolutionSizeX"], hRes); // Grabs "ResolutionSizeX" from GameUserSettings.ini.
+        inipp::extract(GameUserSettings.sections["/Script/Engine.GameUserSettings"]["ResolutionSizeY"], vRes); // Grabs "ResolutionSizeY" from GameUserSettings.ini.
+        std::cout << "Resolution:" << hRes << "x" << vRes << std::endl;
     }
-    // Convert the int values to floats, so then we can determine the aspect ratio
+    // Convert the int values to floats, so then we can determine the aspect ratio.
     float AspectRatio = (float)hRes / (float)vRes;
+    std::cout << "Aspect Ratio:" << AspectRatio << std::endl;
     // Calculates the Vertical Field of View
     float FOV = atan(tan(originalFOV * (float)pi / 360.0f) / (AspectRatio) * (originalAspectRatio)) * 360.0f / (float)pi;
     std::cout << "New FOV Value:" << FOV << std::endl;
@@ -151,11 +160,14 @@ void StartPatch()
 
     Sleep(10000); // Sleeps the thread for ten seconds before applying the memory values.
     FOVCalc(); // Calculates the New Vertical FOV.
-    //Writes FPS Cap to Memory
+
+
+
+    //Writes FPS Cap to Memory, alongside pointer.
     *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) = tMaxFPS;
-    // Writes FOV to Memory
+    // Writes FOV to Memory.
     *(float*)((intptr_t)baseModule + 0x2CD03B0) = FOV;
-    // Writes Pillarbox Removal into Memory ("33 83 4C 02" to "33 83 4C 00")
+    // Writes Pillarbox Removal into Memory ("33 83 4C 02" to "33 83 4C 00").
     *(BYTE*)((intptr_t)baseModule + 0x1E14850 + 0x3) = 00;
 }
 
