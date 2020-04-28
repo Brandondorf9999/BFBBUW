@@ -3,9 +3,11 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LocalDebuggerAttach>false</LocalDebuggerAttach>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>C:\Program Files %28x86%29\Steam\steamapps\common\DaemonXMachina\DXM\Binaries\Win64\DXM-Win64-Shipping.exe</LocalDebuggerCommand>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerAttach>false</LocalDebuggerAttach>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+    <LocalDebuggerCommand>C:\Program Files %28x86%29\Steam\steamapps\common\DaemonXMachina\DXM\Binaries\Win64\DXM-Win64-Shipping.exe</LocalDebuggerCommand>
   </PropertyGroup>
 </Project>

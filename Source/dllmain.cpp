@@ -119,12 +119,17 @@ void StartPatch()
     Sleep(10000); // Sleeps the thread for ten seconds before applying the memory values.
 
     FOVCalc(); // Calculates the New Vertical FOV.
+
+    std::cout << "FPS Address:" << *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) << std::endl;
+    std::cout << "FOV Address:" << *(float*)((intptr_t)baseModule + 0x2CD03B0) << std::endl;
+    //std::cout << "Pillarboxing:" << *(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) << std::endl;
+
     //Writes FPS Cap to Memory, alongside pointer.
-    *(float*)((intptr_t)baseModule + 0x4593398) = tMaxFPS;
+    //*(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) = tMaxFPS;
     // Writes FOV to Memory.
-    *(float*)((intptr_t)baseModule + 0x2CD03B0) = FOV;
+    //*(float*)((intptr_t)baseModule + 0x2CD03B0) = FOV;
     // Writes Pillarbox Removal into Memory ("33 83 4C 02" to "33 83 4C 00").
-    *(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) = 00;
+    //*(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) = 00;
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
