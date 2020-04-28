@@ -16,6 +16,7 @@
 **/
 
 #define _CRT_SECURE_NO_WARNINGS
+#define _USE_MATH_DEFINES
 
 #include "../Source/pch.h"
 #include "wtypes.h"
@@ -28,8 +29,6 @@
 int tMaxFPS;
 float FOV;
 int consoleWindow;
-float pi = 3.14159265358979323846;
-bool debugBuild = false;
 
 static void UnprotectModule(HMODULE p_Module)
 {
@@ -60,14 +59,6 @@ void parseIni() //Parses settings from the config.ini file.
     config.generate(std::cout);
     config.default_section(config.sections["Settings"]);
     config.interpolate();
-    if (!debugBuild) // Checks if project build is Release, since creating another consoleWindow in Debug is redundant.
-    {
-        inipp::extract(config.sections["DebugSettings"]["ConsoleWindow"], consoleWindow);
-        if (consoleWindow == 1)
-        {
-            createConsole();
-        }
-    }
     inipp::extract(config.sections["Settings"]["t.MaxFPS"], tMaxFPS); // Grabs "t.MaxFPS" from config.ini.
 }
 
@@ -88,59 +79,27 @@ void GetDesktopResolution(int& horizontal, int& vertical)
 
 void FOVCalc()
 {
+
+    HMODULE baseModule = GetModuleHandle(NULL);
+
     // Declare the Vertical and Horizoontal Resolution variables.
-    int hRes = 0;
-    int vRes = 0;
+    int hRes = *(int*)((intptr_t)baseModule + 0x416B840); // Grabs Horizontal Resolution integer
+    int vRes = *(int*)((intptr_t)baseModule + 0x416B844); // Grabs Vertical Resolution integer
+
+    std::cout << "Resolution:" << hRes << "x" << vRes << std::endl;
 
     // Declares the original 16:9 Vert- FOV.
     float originalFOV = 0.008726646192;
     float originalAspectRatio = 1.777777777777778;
 
-    // Checks for GameUserSettings.ini.
-    GetFileAttributes("%LOCALAPPDATA%\\DXM\\Saved\\Config\\WindowsNoEditor\\GameUserSettings.ini");
-    if (INVALID_FILE_ATTRIBUTES == GetFileAttributes("%LOCALAPPDATA%\\DXM\\Saved\\Config\\WindowsNoEditor\\GameUserSettings.ini") && GetLastError() == ERROR_FILE_NOT_FOUND)
-    {
-        //GameUserSettings.ini not found.
-        std::cout << "ERROR: GameUserSettings.ini not found! Falling back to check game process resolution." << std::endl;
-        HWND hwndWindow = FindWindow(NULL, TEXT("DaemonXMachina")); // Check for main process window.
-        if (hwndWindow != 0) // if the window exists.
-        {
-            std::cout << "Falling back to game process resolution." << std::endl;
-
-            // Get Window Size.
-            RECT gameWindow;
-            GetWindowRect(hwndWindow, &gameWindow);
-            hRes = gameWindow.right;
-            vRes = gameWindow.bottom;
-            std::cout << "Resolution:" << hRes << "x" << vRes << std::endl;
-        }
-        else
-        {
-            std::cout << "ERROR: game process resolution not found! Falling back to desktop resolution." << std::endl;
-
-            // Get desktop resolution.
-            GetDesktopResolution(hRes, vRes);
-            std::cout << "Resolution:" << hRes << "x" << vRes << std::endl;
-        }
-    }
-    else
-    {
-        // GameUserSettings.ini found.
-        inipp::Ini<char> GameUserSettings; // Creates Inipp reference.
-        std::ifstream is("%LOCALAPPDATA%\\DXM\\Saved\\Config\\WindowsNoEditor\\GameUserSettings.ini"); // Checks for GameUserSettings.ini.
-        GameUserSettings.parse(is); // if so, the "GameUserSettings.ini" will be parsed.
-        GameUserSettings.generate(std::cout);
-        GameUserSettings.default_section(GameUserSettings.sections["/Script/Engine.GameUserSettings"]);
-        GameUserSettings.interpolate();
-        inipp::extract(GameUserSettings.sections["/Script/Engine.GameUserSettings"]["ResolutionSizeX"], hRes); // Grabs "ResolutionSizeX" from GameUserSettings.ini.
-        inipp::extract(GameUserSettings.sections["/Script/Engine.GameUserSettings"]["ResolutionSizeY"], vRes); // Grabs "ResolutionSizeY" from GameUserSettings.ini.
-        std::cout << "Resolution:" << hRes << "x" << vRes << std::endl;
-    }
     // Convert the int values to floats, so then we can determine the aspect ratio.
     float AspectRatio = (float)hRes / (float)vRes;
     std::cout << "Aspect Ratio:" << AspectRatio << std::endl;
     // Calculates the Vertical Field of View
-    float FOV = atan(tan(originalFOV * (float)pi / 360.0f) / (AspectRatio) * (originalAspectRatio)) * 360.0f / (float)pi;
+    //float FOV = atan(tan(originalFOV * (float)M_PI / 360.0f) / (AspectRatio) * (originalAspectRatio)) * 360.0f / pi;
+
+    float FOV = std::round((2.0f * atan(((AspectRatio) / (16.0f / 9.0f)) * tan((originalFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
+
     std::cout << "New FOV Value:" << FOV << std::endl;
 }
 
@@ -148,7 +107,6 @@ void StartPatch()
 {
 #if defined _DEBUG // Checks if the project build is Debug release.
     {
-        debugBuild = true;
         createConsole();
     }
 #endif // Hides the debug window on Release builds, if ConsoleWindow isn't open in config.ini.
@@ -159,16 +117,14 @@ void StartPatch()
     //UnprotectModule(baseModule);
 
     Sleep(10000); // Sleeps the thread for ten seconds before applying the memory values.
+
     FOVCalc(); // Calculates the New Vertical FOV.
-
-
-
     //Writes FPS Cap to Memory, alongside pointer.
-    *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) = tMaxFPS;
+    *(float*)((intptr_t)baseModule + 0x4593398) = tMaxFPS;
     // Writes FOV to Memory.
     *(float*)((intptr_t)baseModule + 0x2CD03B0) = FOV;
     // Writes Pillarbox Removal into Memory ("33 83 4C 02" to "33 83 4C 00").
-    *(BYTE*)((intptr_t)baseModule + 0x1E14850 + 0x3) = 00;
+    *(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) = 00;
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
