@@ -1,0 +1,13 @@
+1. First, the ASI plugin loads the config.ini, and then loads the Framerate Cap and debug console values.
+
+2. If the debug console flag is enabled or the binary build is set to "Debug", then it will call a void that calls the AllocConsole() function, freopen("CONOUT$", "w", stdout), and then std::cout/cin.clear() to allow adding outputs to the ASI Loader console window, for debugging purposes.
+
+3. Afterwards, it will reads the game's ResolutionSizeX and ResolutionSizeY values from the [/Script/Engine.GameUserSettings] field from the GameUserSettings.ini in said game's "%localappdata%\GAMENAMEHERE\Saved\Config\WindowsNoEditor" directory, turns those values into float values (Without modifying the ini file), and then divides the float value for the horizontal resolution by the float value for the vertical resolution to get a aspect ratio float value, which then will be used to determine the FOV value.
+
+If no GameUserSettings.ini exists, then it will take your screen's current resolution and use that instead to calculate the FOV value (If you change the in-game resolution to a different aspect ratio, you will need to restart the game to have the FOV change take effect, although this also applies to using the GameUserSettings.ini as well).
+
+4. The ASI plugin will then get the Process ID for the game executable, the module using the game executable and process id, then the process using the PROCESS_ALL_ACCESS flag, FALSE for the inherit handle value, and by using the process id that was made.
+
+5. It will wait until the game's full window is open to change the memory values, as it's unlikely that these values exist during the splash screen. However, when using the Sleep() function, it actually causes the entire game's loading to be delayed by the desired time in miliseconds, so I need to find a way around that.
+
+6. It will then write the float value for the FOV to the FOV float memory address (Which doesn't use a pointer), write the Framerate cap value from the config file to the tMaxFPS float memory address (Which uses a pointer), and then change the array of bytes for pillarboxing (which doesn't use a pointer either).
