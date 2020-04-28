@@ -23,7 +23,7 @@ Development has just begun, so most functionality is missing.
 Download includes the latest version of [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader).
 
 ## Legal Stuff
-**21xMachi9 (C) 2020 Bryce "KingKrouch" Q.**
+**21xMachi9 (C) 2020 Bryce Q.**
 
 **21xMachi9 is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.**
 
