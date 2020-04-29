@@ -34,6 +34,9 @@ using namespace std;
 bool debugMode;
 float FOV;
 int tMaxFPS;
+int hRes;
+int vRes;
+HMODULE baseModule = GetModuleHandle(NULL);
 
 
 void createConsole()
@@ -47,8 +50,7 @@ void createConsole()
 
 void parseIni() //Parses settings from the config.ini file.
 {
-	// Gets the baseModule and then unprotects it (if needed).
-	HMODULE baseModule = GetModuleHandle(NULL);
+	// Unprotects the Main Module Handle.
 	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
     inipp::Ini<char> config; // Creates Inipp reference.
@@ -71,8 +73,7 @@ void parseIni() //Parses settings from the config.ini file.
 
 void fovCalc()
 {
-	// Gets the baseModule and then unprotects it (if needed).
-	HMODULE baseModule = GetModuleHandle(NULL);
+	// Unprotects the Main Module Handle.
 	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
     // Declare the Vertical and Horizontal Resolution variables.
@@ -86,7 +87,7 @@ void fovCalc()
     // Convert the int values to floats, so then we can determine the aspect ratio.
     float AspectRatio = (float)hRes / (float)vRes;
  
-    // Calculates the Vertical Field of View using the new aspect ratio, the old aspect ratio, and the original FOV
+    // Calculates the vertical FOV using the new aspect ratio, the old aspect ratio, and the original FOV
     float FOV = std::round((2.0f * atan(((AspectRatio) / (16.0f / 9.0f)) * tan((originalFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
 
     // Shows debug logs in debug mode.
@@ -101,13 +102,21 @@ void fovCalc()
     *(float*)((intptr_t)baseModule + 0x2CD03B0) = (float)FOV;
 }
 
+void ResolutionCheck()
+{
+
+    if (hRes != *(int*)((intptr_t)baseModule + 0x416B840) or vRes != *(int*)((intptr_t)baseModule + 0x416B844))
+    {
+        fovCalc();
+    }
+}
+
 void pillarboxRemoval()
 {
-	// Gets the baseModule and then unprotects it (if needed).
-	HMODULE baseModule = GetModuleHandle(NULL);
+	// Unprotects the Main Module Handle.
 	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
-	// Writes Pillarbox Removal into Memory ("33 83 4C 02" to "33 83 4C 00").
+	// Writes pillarbox removal into memory ("33 83 4C 02" to "33 83 4C 00").
 	*(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) = 00;
 }
 
@@ -124,7 +133,7 @@ void StartPatch()
 
     parseIni(); // Reads from the config.ini file, and applies the new tMaxFPS value.
 
-    fovCalc(); // Calculates the New Vertical FOV.
+    fovCalc(); // Calculates the new vertical FOV.
 
     //pillarboxRemoval(); // Removes the in-game pillarboxing.
 }
