@@ -22,7 +22,6 @@
 
 #include "../Source/pch.h"
 #include "wtypes.h"
-#include "../Source/ThirdParty/inipp/inipp/inipp.h"
 #include <Windows.h>
 #include <iostream>
 #include <fstream>
@@ -33,9 +32,12 @@ using namespace std;
 
 bool debugMode;
 float FOV;
-int tMaxFPS;
+int tMaxFPS = 0;
 int hRes;
 int vRes;
+bool resCheck = true;
+bool displayedStartupSettings = false;
+float aspectRatio;
 HMODULE baseModule = GetModuleHandle(NULL);
 
 
@@ -48,64 +50,55 @@ void createConsole()
     cout << "21xMachi9 Loaded!" << endl; // Tells us that the ASI Plugin loaded successfully.
 }
 
-void parseIni() //Parses settings from the config.ini file.
+void uncapFPS() //Uncaps the framerate.
 {
-	// Unprotects the Main Module Handle.
+	// Unprotects the main module handle.
 	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
-    inipp::Ini<char> config; // Creates Inipp reference.
-    ifstream is("config.ini"); // Checks for config.ini.
-    config.parse(is); // if so, the "config.ini" will be parsed.
-    config.generate(cout);
-    config.default_section(config.sections["Settings"]);
-    config.interpolate();
-    inipp::extract(config.sections["Settings"]["t.MaxFPS"], tMaxFPS); // Grabs "t.MaxFPS" from config.ini.
-
-	// Shows debug logs in debug mode.
-	if (debugMode)
-	{
-		cout << "Current t.MaxFPS in config.ini: " << tMaxFPS << endl;
-	}
-
-    //Writes FPS Cap to Memory, alongside pointer.
+    //Writes the new t.MaxFPS cap to memory, alongside pointer.
     *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) = (float)tMaxFPS;
 }
 
 void fovCalc()
 {
-	// Unprotects the Main Module Handle.
+	// Unprotects the main module handle.
 	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
-    // Declare the Vertical and Horizontal Resolution variables.
-    int hRes = *(int*)((intptr_t)baseModule + 0x416B840); // Grabs Horizontal Resolution integer
-    int vRes = *(int*)((intptr_t)baseModule + 0x416B844); // Grabs Vertical Resolution integer
+    // Declare the vertical and horizontal resolution variables.
+    int hRes = *(int*)((intptr_t)baseModule + 0x416B840); // Grabs Horizontal Resolution integer.
+    int vRes = *(int*)((intptr_t)baseModule + 0x416B844); // Grabs Vertical Resolution integer.
 
-    // Declares the original 16:9 Vertical FOV.
+    // Declares the original 16:9 vertical FOV.
     float originalFOV = 0.008726646192;
     float originalAspectRatio = 1.777777777777778;
 
     // Convert the int values to floats, so then we can determine the aspect ratio.
-    float AspectRatio = (float)hRes / (float)vRes;
+    float aspectRatio = (float)hRes / (float)vRes;
  
-    // Calculates the vertical FOV using the new aspect ratio, the old aspect ratio, and the original FOV
-    float FOV = std::round((2.0f * atan(((AspectRatio) / (16.0f / 9.0f)) * tan((originalFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
+    // Calculates the vertical FOV using the new aspect ratio, the old aspect ratio, and the original FOV.
+    float FOV = std::round((2.0f * atan(((aspectRatio) / (16.0f / 9.0f)) * tan((originalFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
 
     // Shows debug logs in debug mode.
     if (debugMode)
     {
-		cout << "Resolution:" << hRes << "x" << vRes << endl;
-		cout << "Aspect Ratio:" << AspectRatio << endl;
-		cout << "New FOV Value:" << FOV << endl;
+        if (displayedStartupSettings = false)
+        {
+			cout << "Startup Settings" << endl;
+			cout << "Resolution:" << hRes << "x" << vRes << endl;
+			cout << "Aspect Ratio:" << aspectRatio << endl;
+			cout << "New FOV Value:" << FOV << endl;
+            displayedStartupSettings = true;
+        }
     }
 
     // Writes FOV to Memory.
     *(float*)((intptr_t)baseModule + 0x2CD03B0) = (float)FOV;
 }
 
-void ResolutionCheck()
+void resolutionCheck()
 {
 
-    if (hRes != *(int*)((intptr_t)baseModule + 0x416B840) or vRes != *(int*)((intptr_t)baseModule + 0x416B844))
+    if (aspectRatio != (*(int*)((intptr_t)baseModule + 0x416B840) / *(int*)((intptr_t)baseModule + 0x416B844)))
     {
         fovCalc();
     }
@@ -113,7 +106,7 @@ void ResolutionCheck()
 
 void pillarboxRemoval()
 {
-	// Unprotects the Main Module Handle.
+    // Unprotects the main module handle.
 	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
 	// Writes pillarbox removal into memory ("33 83 4C 02" to "33 83 4C 00").
@@ -131,11 +124,17 @@ void StartPatch()
 
     Sleep(5000); // Sleeps the thread for five seconds before applying the memory values.
 
-    parseIni(); // Reads from the config.ini file, and applies the new tMaxFPS value.
+    uncapFPS(); //Uncaps the framerate.
 
     fovCalc(); // Calculates the new vertical FOV.
 
     //pillarboxRemoval(); // Removes the in-game pillarboxing.
+
+    // Runs resolution check in a loop
+    while (resCheck != false)
+    {
+        resolutionCheck();
+    }
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)

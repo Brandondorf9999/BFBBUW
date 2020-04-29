@@ -4,6 +4,4 @@ copy ".\21xMachi9_Debug_Win64.ilk" "C:\Program Files (x86)\Steam\steamapps\commo
 
 copy ".\21xMachi9_Debug_Win64.pdb" "C:\Program Files (x86)\Steam\steamapps\common\DaemonXMachina\DXM\Binaries\Win64\plugins"
 
-copy ".\config.ini" "C:\Program Files (x86)\Steam\steamapps\common\DaemonXMachina\DXM\Binaries\Win64\plugins"
-
 start steam://run/1167450
