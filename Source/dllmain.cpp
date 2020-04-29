@@ -40,6 +40,21 @@ bool displayedStartupSettings = false;
 float aspectRatio;
 HMODULE baseModule = GetModuleHandle(NULL);
 
+void WriteToMemory(uintptr_t addressToWrite, char* valueToWrite, int byteNum)
+{
+	//used to change our file access type, stores the old
+	//access type and restores it after memory is written
+	unsigned long OldProtection;
+	//give that address read and write permissions and store the old permissions at oldProtection
+	VirtualProtect((LPVOID)(addressToWrite), byteNum, PAGE_EXECUTE_READWRITE, &OldProtection);
+
+	//write the memory into the program and overwrite previous value
+	memcpy((LPVOID)addressToWrite, valueToWrite, byteNum);
+
+	//reset the permissions of the address back to oldProtection after writting memory
+	VirtualProtect((LPVOID)(addressToWrite), byteNum, OldProtection, NULL);
+}
+
 void createConsole()
 {
     AllocConsole(); // Adds console window for testing purposes.
@@ -97,10 +112,22 @@ void resolutionCheck()
     }
 }
 
+void framerateCheck()
+{
+
+	if (tMaxFPS != *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0))
+	{
+		uncapFPS();
+	}
+}
+
 void pillarboxRemoval()
 {
-	// Writes pillarbox removal into memory ("33 83 4C 02" to "33 83 4C 00").
-	*(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) = 00;
+	//uintptr_t addressToWrite = baseModule + 0x1E14850;
+    uintptr_t addressToWrite = ((intptr_t)baseModule + 0x1E14850);
+    // Writes pillarbox removal into memory ("33 83 4C 02" to "33 83 4C 00").
+	char writeThis[] = "\x33\x83\x4c\x00";
+	WriteToMemory(addressToWrite, writeThis, 4);
 }
 
 void StartPatch()
@@ -126,6 +153,7 @@ void StartPatch()
     while (resCheck != false)
     {
         resolutionCheck();
+        framerateCheck();
     }
 }
 
