@@ -52,18 +52,12 @@ void createConsole()
 
 void uncapFPS() //Uncaps the framerate.
 {
-	// Unprotects the main module handle.
-	ScopedUnprotect::FullModule UnProtect(baseModule);;
-
     //Writes the new t.MaxFPS cap to memory, alongside pointer.
     *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) = (float)tMaxFPS;
 }
 
 void fovCalc()
 {
-	// Unprotects the main module handle.
-	ScopedUnprotect::FullModule UnProtect(baseModule);;
-
     // Declare the vertical and horizontal resolution variables.
     int hRes = *(int*)((intptr_t)baseModule + 0x416B840); // Grabs Horizontal Resolution integer.
     int vRes = *(int*)((intptr_t)baseModule + 0x416B844); // Grabs Vertical Resolution integer.
@@ -106,9 +100,6 @@ void resolutionCheck()
 
 void pillarboxRemoval()
 {
-    // Unprotects the main module handle.
-	ScopedUnprotect::FullModule UnProtect(baseModule);;
-
 	// Writes pillarbox removal into memory ("33 83 4C 02" to "33 83 4C 00").
 	*(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) = 00;
 }
@@ -121,6 +112,9 @@ void StartPatch()
         debugMode = true;
     }
 #endif
+
+	// Unprotects the main module handle.
+	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
     Sleep(5000); // Sleeps the thread for five seconds before applying the memory values.
 
