@@ -128,7 +128,7 @@ void StartPatch()
 
     fovCalc(); // Calculates the new vertical FOV.
 
-    //pillarboxRemoval(); // Removes the in-game pillarboxing.
+    pillarboxRemoval(); // Removes the in-game pillarboxing.
 
     // Runs resolution check in a loop
     while (resCheck != false)
