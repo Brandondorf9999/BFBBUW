@@ -40,7 +40,6 @@ bool displayedStartupSettings = false;
 float aspectRatio;
 HMODULE baseModule = GetModuleHandle(NULL);
 
-
 void createConsole()
 {
     AllocConsole(); // Adds console window for testing purposes.
@@ -61,17 +60,17 @@ void fovCalc()
     // Declare the vertical and horizontal resolution variables.
     int hRes = *(int*)((intptr_t)baseModule + 0x416B840); // Grabs Horizontal Resolution integer.
     int vRes = *(int*)((intptr_t)baseModule + 0x416B844); // Grabs Vertical Resolution integer.
-
-    // Declares the original 16:9 vertical FOV.
+    
+                                                          // Declares the original 16:9 vertical FOV.
     float originalFOV = 0.008726646192;
     float originalAspectRatio = 1.777777777777778;
-
+    
     // Convert the int values to floats, so then we can determine the aspect ratio.
     float aspectRatio = (float)hRes / (float)vRes;
- 
+    
     // Calculates the vertical FOV using the new aspect ratio, the old aspect ratio, and the original FOV.
     float FOV = std::round((2.0f * atan(((aspectRatio) / (16.0f / 9.0f)) * tan((originalFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
-
+    
     // Shows debug logs in debug mode.
     if (debugMode)
     {
@@ -112,7 +111,6 @@ void StartPatch()
         debugMode = true;
     }
 #endif
-
 	// Unprotects the main module handle.
 	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
