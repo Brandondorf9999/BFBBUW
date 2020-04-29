@@ -1,12 +1,14 @@
 Needs to be done:
-- Writing memory values without access violations
-- Removing SteamAPI logs from the debug console window, as they are redundant
-- Automatic update checker before the game launches, which checks the AppVeyor for a new update, and then asks if they want to update before launching the game. 
+
+- Automatic update checker before the game launches, which checks the AppVeyor for a new update, and then asks if they want to update before launching the game.
+- Reading from config files (So then a custom FPS cap option and custom FOV can be implemented)
+- Custom FOV option (Which is based around a 16:9 Vert- Aspect Ratio), that compensates based on aspect ratio
+- Code refactoring 
 
 Finished:
 
+- Writing memory values without access violations
 - Game running in a new thread, so running sleep functions won't freeze the rest of the process
 - Grabbing the in-game resolution from the in-game executable and calculating a new field of view
-- Reading from config files
-- Reading memory values (Although array of byte values are still having a little bit of trouble with access violations)
+- Reading memory values
 - Getting the Module Handle
