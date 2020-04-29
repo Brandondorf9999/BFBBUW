@@ -27,96 +27,106 @@
 #include <iostream>
 #include <fstream>
 #include <math.h>
+#include "../Source/ThirdParty/ModUtils/MemoryMgr.h"
 
-int tMaxFPS;
+using namespace std;
+
+bool debugMode;
 float FOV;
-int consoleWindow;
+int tMaxFPS;
 
-static void UnprotectModule(HMODULE p_Module)
-{
-    //This function was provided by Orfeasz
-    PIMAGE_DOS_HEADER s_Header = (PIMAGE_DOS_HEADER)p_Module;
-    PIMAGE_NT_HEADERS s_NTHeader = (PIMAGE_NT_HEADERS)((DWORD)p_Module + s_Header->e_lfanew);
-
-    SIZE_T s_ImageSize = s_NTHeader->OptionalHeader.SizeOfImage;
-
-    DWORD s_OldProtect;
-    VirtualProtect((LPVOID)p_Module, s_ImageSize, PAGE_EXECUTE_READWRITE, &s_OldProtect);
-}
 
 void createConsole()
 {
     AllocConsole(); // Adds console window for testing purposes.
-    freopen("CONOUT$", "w", stdout); // Allows us to add outputs to the ASI Loader Console Window.
-    std::cout.clear();
-    std::cin.clear();
-    std::cout << "21xMachi9 Loaded!" << std::endl; // Tells us that the ASI Plugin loaded successfully.
+    freopen_s((FILE**)stdout, "CONOUT$", "w", stdout); // Allows us to add outputs to the ASI Loader Console Window.
+    cout.clear();
+    cin.clear();
+    cout << "21xMachi9 Loaded!" << endl; // Tells us that the ASI Plugin loaded successfully.
 }
 
 void parseIni() //Parses settings from the config.ini file.
 {
+	// Gets the baseModule and then unprotects it (if needed).
+	HMODULE baseModule = GetModuleHandle(NULL);
+	ScopedUnprotect::FullModule UnProtect(baseModule);;
+
     inipp::Ini<char> config; // Creates Inipp reference.
-    std::ifstream is("config.ini"); // Checks for config.ini.
+    ifstream is("config.ini"); // Checks for config.ini.
     config.parse(is); // if so, the "config.ini" will be parsed.
-    config.generate(std::cout);
+    config.generate(cout);
     config.default_section(config.sections["Settings"]);
     config.interpolate();
     inipp::extract(config.sections["Settings"]["t.MaxFPS"], tMaxFPS); // Grabs "t.MaxFPS" from config.ini.
+
+	// Shows debug logs in debug mode.
+	if (debugMode)
+	{
+		cout << "Current t.MaxFPS in config.ini: " << tMaxFPS << endl;
+	}
+
+    //Writes FPS Cap to Memory, alongside pointer.
+    *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) = (float)tMaxFPS;
 }
 
-void FOVCalc()
+void fovCalc()
 {
+	// Gets the baseModule and then unprotects it (if needed).
+	HMODULE baseModule = GetModuleHandle(NULL);
+	ScopedUnprotect::FullModule UnProtect(baseModule);;
 
-    HMODULE baseModule = GetModuleHandle(NULL);
-
-    // Declare the Vertical and Horizoontal Resolution variables.
+    // Declare the Vertical and Horizontal Resolution variables.
     int hRes = *(int*)((intptr_t)baseModule + 0x416B840); // Grabs Horizontal Resolution integer
     int vRes = *(int*)((intptr_t)baseModule + 0x416B844); // Grabs Vertical Resolution integer
 
-    std::cout << "Resolution:" << hRes << "x" << vRes << std::endl;
-
-    // Declares the original 16:9 Vert- FOV.
+    // Declares the original 16:9 Vertical FOV.
     float originalFOV = 0.008726646192;
     float originalAspectRatio = 1.777777777777778;
 
     // Convert the int values to floats, so then we can determine the aspect ratio.
     float AspectRatio = (float)hRes / (float)vRes;
-    std::cout << "Aspect Ratio:" << AspectRatio << std::endl;
-    // Calculates the Vertical Field of View
-    //float FOV = atan(tan(originalFOV * (float)M_PI / 360.0f) / (AspectRatio) * (originalAspectRatio)) * 360.0f / pi;
-
+ 
+    // Calculates the Vertical Field of View using the new aspect ratio, the old aspect ratio, and the original FOV
     float FOV = std::round((2.0f * atan(((AspectRatio) / (16.0f / 9.0f)) * tan((originalFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
 
-    std::cout << "New FOV Value:" << FOV << std::endl;
+    // Shows debug logs in debug mode.
+    if (debugMode)
+    {
+		cout << "Resolution:" << hRes << "x" << vRes << endl;
+		cout << "Aspect Ratio:" << AspectRatio << endl;
+		cout << "New FOV Value:" << FOV << endl;
+    }
+
+    // Writes FOV to Memory.
+    *(float*)((intptr_t)baseModule + 0x2CD03B0) = (float)FOV;
+}
+
+void pillarboxRemoval()
+{
+	// Gets the baseModule and then unprotects it (if needed).
+	HMODULE baseModule = GetModuleHandle(NULL);
+	ScopedUnprotect::FullModule UnProtect(baseModule);;
+
+	// Writes Pillarbox Removal into Memory ("33 83 4C 02" to "33 83 4C 00").
+	*(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) = 00;
 }
 
 void StartPatch()
 {
-#if defined _DEBUG // Checks if the project build is Debug release.
+#if defined _DEBUG // Checks if build is Debug, and if so, creates a console and enables debugMode.
     {
         createConsole();
+        debugMode = true;
     }
-#endif // Hides the debug window on Release builds, if ConsoleWindow isn't open in config.ini.
+#endif
 
-    parseIni();
-    // Gets the base module address, and also unprotects it from write protection.
-    HMODULE baseModule = GetModuleHandle(NULL);
-    //UnprotectModule(baseModule);
+    Sleep(5000); // Sleeps the thread for five seconds before applying the memory values.
 
-    Sleep(10000); // Sleeps the thread for ten seconds before applying the memory values.
+    parseIni(); // Reads from the config.ini file, and applies the new tMaxFPS value.
 
-    FOVCalc(); // Calculates the New Vertical FOV.
+    fovCalc(); // Calculates the New Vertical FOV.
 
-    std::cout << "FPS Address:" << *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) << std::endl;
-    std::cout << "FOV Address:" << *(float*)((intptr_t)baseModule + 0x2CD03B0) << std::endl;
-    //std::cout << "Pillarboxing:" << *(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) << std::endl;
-
-    //Writes FPS Cap to Memory, alongside pointer.
-    //*(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) = tMaxFPS;
-    // Writes FOV to Memory.
-    //*(float*)((intptr_t)baseModule + 0x2CD03B0) = FOV;
-    // Writes Pillarbox Removal into Memory ("33 83 4C 02" to "33 83 4C 00").
-    //*(BYTE*)(*((intptr_t*)((intptr_t)baseModule + 0x1E14850)) + 0x3) = 00;
+    //pillarboxRemoval(); // Removes the in-game pillarboxing.
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved)
