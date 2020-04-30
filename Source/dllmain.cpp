@@ -31,26 +31,35 @@
 
 using namespace std;
 
-bool debugMode;
-float FOV;
-bool useCustomFPSCap;
-bool ignoreUpdates;
-bool useCustomFOV;
+// Config.ini variables
+int useCustomFPSCap;
+int useCustomFOV;
 int tMaxFPS;
+int ignoreUpdates;
+
+// Resolution related variables
 int hRes;
 int vRes;
-int customFOV;
-bool check = true;
-bool displayedStartupSettings = false;
+float originalAspectRatio = 1.777777777777778;
 float aspectRatio;
+
+// FOV variables
+float originalFOV = 0.008726646192; // Declares the original 16:9 vertical FOV.
+float customFOV;
+float FOV;
+
+// Misc variables
+bool check = true; // do not change to false or else resolution checks won't run.
+bool displayedStartupSettings = false; // Prevents the debug strings from being shown constantly on each update.
+bool debugMode; // Allows for printing debug strings.
+
+
+// Process HMODULE variable
 HMODULE baseModule = GetModuleHandle(NULL);
 
 void createConsole()
 {
     AllocConsole(); // Adds console window for testing purposes.
-    freopen_s((FILE**)stdout, "CONOUT$", "w", stdout); // Allows us to add outputs to the ASI Loader Console Window.
-    cout.clear();
-    cin.clear();
     cout << "21xMachi9 Loaded!" << endl; // Tells us that the ASI Plugin loaded successfully.
 }
 
@@ -66,17 +75,13 @@ void fovCalc()
     int hRes = *(int*)((intptr_t)baseModule + 0x416B840); // Grabs Horizontal Resolution integer.
     int vRes = *(int*)((intptr_t)baseModule + 0x416B844); // Grabs Vertical Resolution integer.
 
-                                                          // Declares the original 16:9 vertical FOV.
-    float originalFOV = 0.008726646192;
-    float originalAspectRatio = 1.777777777777778;
-
     // Convert the int values to floats, so then we can determine the aspect ratio.
     float aspectRatio = (float)hRes / (float)vRes;
 
-    if (useCustomFOV)
+    if (useCustomFOV == 1)
     {
 		// Calculates the vertical FOV using the new aspect ratio, the old aspect ratio, and the desired custom FOV.
-		float FOV = std::round((2.0f * atan(((aspectRatio) / (16.0f / 9.0f)) * tan(((float)customFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
+        float FOV = std::round((2.0f * atan(((aspectRatio) / (16.0f / 9.0f)) * tan((customFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
     }
     else
     {
@@ -87,7 +92,7 @@ void fovCalc()
     // Shows debug logs in debug mode.
     if (debugMode)
     {
-        if (displayedStartupSettings = false)
+        if (displayedStartupSettings)
         {
 			cout << "Startup Settings" << endl;
 			cout << "Resolution:" << hRes << "x" << vRes << endl;
@@ -103,7 +108,6 @@ void fovCalc()
 
 void resolutionCheck()
 {
-
     if (aspectRatio != (*(int*)((intptr_t)baseModule + 0x416B840) / *(int*)((intptr_t)baseModule + 0x416B844)))
     {
         fovCalc();
@@ -112,13 +116,10 @@ void resolutionCheck()
 
 void framerateCheck()
 {
-    if (useCustomFPSCap) 
-    {
-		if (tMaxFPS != *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0))
-		{
-			uncapFPS();
-		}
-    }
+	if (tMaxFPS != *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0))
+	{
+		uncapFPS();
+	}
 }
 
 void pillarboxRemoval()
@@ -129,26 +130,33 @@ void pillarboxRemoval()
 
 void readConfig()
 {
-	inipp::Ini<char> ini;
-	std::ifstream is("config.ini");
-    ini.parse(is);
-	ini.generate(cout);
-	ini.default_section(ini.sections["Settings"]);
-    ini.interpolate();
-    ini.generate(cout);
-    inipp::extract(ini.sections["Settings"]["useCustomFOV"], useCustomFOV);
-    ini.generate(cout);
-    inipp::extract(ini.sections["Settings"]["FOV"], customFOV);
-    ini.generate(cout);
-    inipp::extract(ini.sections["Experimental"]["useCustomFPSCap"], useCustomFPSCap);
-    ini.generate(cout);
-    inipp::extract(ini.sections["Experimental"]["maxFPS"], tMaxFPS);
-	ini.generate(cout);
-	inipp::extract(ini.sections["Launcher"]["ignoreUpdates"], ignoreUpdates);
+    int customFOVConfig;
+	inipp::Ini<char> config;
+	ifstream iniName("config.ini");
+    config.parse(iniName);
+	config.generate(cout);
+	config.default_section(config.sections["Settings"]);
+    config.interpolate();
+    config.generate(cout);
+    inipp::extract(config.sections["FieldOfView"]["useCustomFOV"], useCustomFOV);
+    config.generate(cout);
+    inipp::extract(config.sections["FieldOfView"]["FOV"], customFOVConfig);
+    config.generate(cout);
+    inipp::extract(config.sections["Experimental"]["useCustomFPSCap"], useCustomFPSCap);
+    config.generate(cout);
+    inipp::extract(config.sections["Experimental"]["maxFPS"], tMaxFPS);
+	config.generate(cout);
+	inipp::extract(config.sections["Launcher"]["ignoreUpdates"], ignoreUpdates);
+
+    customFOV = (float)customFOVConfig / 10000.0f;
 }
 
 void StartPatch()
 {
+    cout.flush();
+	freopen_s((FILE**)stdout, "CONOUT$", "w", stdout); // Allows us to add outputs to the ASI Loader Console Window.
+	cout.clear();
+	cin.clear();
 #if defined _DEBUG // Checks if build is Debug, and if so, creates a console and enables debugMode.
     {
         createConsole();
@@ -164,20 +172,28 @@ void StartPatch()
 
     Sleep(5000); // Sleeps the thread for five seconds before applying the memory values.
 
-    if (useCustomFPSCap)
+	fovCalc(); // Calculates the new vertical FOV.
+
+	pillarboxRemoval(); // Removes the in-game pillarboxing.
+
+    // checks if CustomFPS cap is enabled before choosing which processes to loop, and if to uncap the framerate. This is done to save on CPU resources.
+    if (useCustomFPSCap == 1)
     {
         uncapFPS(); //Uncaps the framerate.
+        // Runs resolution and framerate check in a loop.
+		while (check != false)
+		{
+			resolutionCheck();
+			framerateCheck();
+		}
     }
-
-    fovCalc(); // Calculates the new vertical FOV.
-
-    pillarboxRemoval(); // Removes the in-game pillarboxing.
-
-    // Runs resolution check in a loop
-    while (check != false)
+    else
     {
-        resolutionCheck();
-        framerateCheck();
+        // Runs resolution check in a loop.
+		while (check != false)
+		{
+			resolutionCheck();
+		}
     }
 }
 
