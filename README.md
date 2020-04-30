@@ -4,6 +4,10 @@
 ## About
 An ASI Loader plugin which allows Daemon X Machina to run on Ultrawide displays, and with even higher framerates.
 
+[More Info](https://github.com/KingKrouch/21xMachi9/wiki/About)
+
+[Roadmap](https://github.com/KingKrouch/21xMachi9/projects/1)
+
 ## Compiling (For programmers)
 1. Download Visual Studio 2019
 2. Open this repository in GitHub desktop to clone the repo.
