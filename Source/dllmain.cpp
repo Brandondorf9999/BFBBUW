@@ -125,7 +125,7 @@ void StartPatch()
 
     Sleep(5000); // Sleeps the thread for five seconds before applying the memory values.
 
-    uncapFPS(); //Uncaps the framerate.
+    //uncapFPS(); //Uncaps the framerate.
 
     fovCalc(); // Calculates the new vertical FOV.
 
@@ -135,7 +135,7 @@ void StartPatch()
     while (resCheck != false)
     {
         resolutionCheck();
-        framerateCheck();
+        //framerateCheck();
     }
 }
 
