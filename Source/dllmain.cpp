@@ -108,7 +108,6 @@ void framerateCheck()
 
 void pillarboxRemoval()
 {
-	//uintptr_t addressToWrite = baseModule + 0x1E14850;
     // Writes pillarbox removal into memory ("33 83 4C 02" to "33 83 4C 00").
 	memcpy((LPVOID)((intptr_t)baseModule + 0x1E14850), "\x33\x83\x4c\x00", 4);
 }
