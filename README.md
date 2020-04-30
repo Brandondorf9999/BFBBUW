@@ -20,7 +20,7 @@ Copy the plugins folder and dsound.dll (ASI Loader) into the **"\DXM\Binaries\Wi
 *Note: If you don't have any other Steam library locations set up, this will likely be **"C:\Program Files (x86)\Steam\SteamApps\Common\DaemonXMachina"**.*
 
 ## Download (For novices)
-[Latest version can be downloaded here.](https://ci.appveyor.com/api/buildjobs/23cgnnw9ubqjhugj/artifacts/Binaries%2F21xMachi9_Win64_Build-Release.zip)
+[Latest version can be downloaded here.](https://ci.appveyor.com/project/KingKrouch/21xMachi9/branch/master/artifacts)
 
 Download includes the latest version of [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader).
 
