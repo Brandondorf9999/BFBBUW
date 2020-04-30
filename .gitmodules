@@ -2,5 +2,5 @@
 	path = Source/ThirdParty/ModUtils
 	url = https://github.com/CookiePLMonster/ModUtils
 [submodule "Source\\ThirdParty\\inipp"]
-	path = Source\\ThirdParty\\inipp
+	path = Source/ThirdParty/inipp
 	url = https://github.com/mcmtroffaes/inipp
