@@ -4,6 +4,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "21xMachi9", ".vxcproj\21xMachi9.vcxproj", "{CAEF8B47-A062-419B-9FA9-678D6F7A665D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{823AB551-73EF-4DFA-B52B-078020C348B0} = {823AB551-73EF-4DFA-B52B-078020C348B0}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Updater", ".vxcproj\Updater.vcxproj", "{823AB551-73EF-4DFA-B52B-078020C348B0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +20,10 @@ Global
 		{CAEF8B47-A062-419B-9FA9-678D6F7A665D}.Debug|Win64.Build.0 = Debug|x64
 		{CAEF8B47-A062-419B-9FA9-678D6F7A665D}.Release|Win64.ActiveCfg = Release|x64
 		{CAEF8B47-A062-419B-9FA9-678D6F7A665D}.Release|Win64.Build.0 = Release|x64
+		{823AB551-73EF-4DFA-B52B-078020C348B0}.Debug|Win64.ActiveCfg = Debug|x64
+		{823AB551-73EF-4DFA-B52B-078020C348B0}.Debug|Win64.Build.0 = Debug|x64
+		{823AB551-73EF-4DFA-B52B-078020C348B0}.Release|Win64.ActiveCfg = Release|x64
+		{823AB551-73EF-4DFA-B52B-078020C348B0}.Release|Win64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

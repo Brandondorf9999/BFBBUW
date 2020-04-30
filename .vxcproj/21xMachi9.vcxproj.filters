@@ -19,6 +19,9 @@
     <Filter Include="ThirdParty\ModUtils">
       <UniqueIdentifier>{34e6096e-97e7-4d60-9847-7031090c7445}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ThirdParty\inipp">
+      <UniqueIdentifier>{fa969e7e-8e29-4ab3-80aa-f743479c74c8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Source\dllmain.cpp">
@@ -55,6 +58,9 @@
     </ClInclude>
     <ClInclude Include="..\Source\ThirdParty\ModUtils\Trampoline.h">
       <Filter>ThirdParty\ModUtils</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Source\ThirdParty\inipp\inipp\inipp.h">
+      <Filter>ThirdParty\inipp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
