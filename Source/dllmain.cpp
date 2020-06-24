@@ -76,8 +76,8 @@ void readConfig()
 void fovCalc()
 {
     // Declare the vertical and horizontal resolution variables.
-    int hRes = *(int*)((intptr_t)baseModule + 0x416B840); // Grabs Horizontal Resolution integer.
-    int vRes = *(int*)((intptr_t)baseModule + 0x416B844); // Grabs Vertical Resolution integer.
+    int hRes = *(int*)((intptr_t)baseModule + 0x31D9E88); // Grabs Horizontal Resolution integer.
+    int vRes = *(int*)((intptr_t)baseModule + 0x31D9E8C); // Grabs Vertical Resolution integer.
 
     // Convert the int values to floats, so then we can determine the aspect ratio.
     float aspectRatio = (float)hRes / (float)vRes;
@@ -101,24 +101,18 @@ void fovCalc()
     }
 
     // Writes FOV to Memory.
-    *(float*)((intptr_t)baseModule + 0x2CD03B0) = FOV;
-}
-
-void pillarboxRemoval()
-{
-	// Writes pillarbox removal into memory ("33 83 4C 02" to "33 83 4C 00").
-	memcpy((LPVOID)((intptr_t)baseModule + 0x1E14850), "\x33\x83\x4c\x00", 4);
+    *(float*)((intptr_t)baseModule + 0x264ED20) = FOV;
 }
 
 void uncapFPS() //Uncaps the framerate.
 {
 	//Writes the new t.MaxFPS cap to memory, alongside pointer.
-	*(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0) = (float)tMaxFPS;
+	*(float*)(*((intptr_t*)((intptr_t)baseModule + 0x034881D0)) + 0x0) = (float)tMaxFPS;
 }
 
 void resolutionCheck()
 {
-    if (aspectRatio != (*(int*)((intptr_t)baseModule + 0x416B840) / *(int*)((intptr_t)baseModule + 0x416B844)))
+    if (aspectRatio != (*(int*)((intptr_t)baseModule + 0x31D9E88) / *(int*)((intptr_t)baseModule + 0x31D9E8C)))
     {
         fovCalc();
     }
@@ -126,7 +120,7 @@ void resolutionCheck()
 
 void framerateCheck()
 {
-	if (tMaxFPS != *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x4593398)) + 0x0))
+	if (tMaxFPS != *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x034881D0)) + 0x0))
 	{
 		uncapFPS();
 	}
@@ -143,8 +137,6 @@ void StartPatch()
     Sleep(5000); // Sleeps the thread for five seconds before applying the memory values.
 
 	fovCalc(); // Calculates the new vertical FOV.
-
-	pillarboxRemoval(); // Removes the in-game pillarboxing.
 
     // checks if CustomFPS cap is enabled before choosing which processes to loop, and if to uncap the framerate. This is done to save on CPU resources.
     if (useCustomFPSCap == 1)
