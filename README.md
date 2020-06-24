@@ -1,5 +1,5 @@
 # BFBBUW (SpongeBob Battle For Bikini Bottom Rehydrated Ultrawide Fix)
-[![Build status](https://ci.appveyor.com/api/projects/status/4337wbguqe28173v/branch/master?svg=true)](https://ci.appveyor.com/project/KingKrouch/21xMachi9/branch/master)
+[![Build status](https://ci.appveyor.com/api/projects/status/4nr57ua49q68j1n5/branch/master?svg=true)](https://ci.appveyor.com/project/KingKrouch/bfbbuw/branch/master)
 
 ## About
 An ASI Loader plugin which allows BFBBR to run on Ultrawide displays, and with even higher framerates.
@@ -18,7 +18,7 @@ Copy the plugins folder and dsound.dll (ASI Loader) into the **"\Pineapple\Binar
 *Note: If you don't have any other Steam library locations set up, this will likely be **"C:\Program Files (x86)\Steam\SteamApps\Common\SpongeBob SquarePants Battle for Bikini Bottom - Rehydrated"**.*
 
 ## Download (For novices)
-[Latest version can be downloaded here.](https://ci.appveyor.com/project/KingKrouch/BFBBUW/branch/master/artifacts)
+[Latest version can be downloaded here.](https://ci.appveyor.com/project/KingKrouch/bfbbuw/branch/master/artifacts)
 
 Download includes the latest version of [Ultimate ASI Loader](https://github.com/ThirteenAG/Ultimate-ASI-Loader).
 
