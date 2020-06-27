@@ -101,7 +101,7 @@ void fovCalc()
     }
 
     // Writes FOV to Memory.
-    *(float*)((intptr_t)baseModule + 0x264ED20) = FOV;
+    *(float*)((intptr_t)baseModule + 0x27B65F0) = FOV;
 }
 
 void uncapFPS() //Uncaps the framerate.
