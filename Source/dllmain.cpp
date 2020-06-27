@@ -87,7 +87,7 @@ void fovCalc()
         case 0:
         {
             // If useCustomFOV is set to "0", then calculate the vertical FOV using the new aspect ratio, the old aspect ratio, and the original FOV.
-            FOV = round((2.0f * atan(((aspectRatio) / (16.0f / 9.0f)) * tan((originalFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
+            FOV = round((2.0f * atan(((aspectRatio >= originalAspectRatio ? originalAspectRatio : aspectRatio) / (originalAspectRatio)) * tan((originalFOV * 10000.0f) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
             break;
         }
         case 1:
@@ -95,7 +95,7 @@ void fovCalc()
 			// Subtracts the custom FOV by the default FOV to get the difference
 			float FOVDifference = (float)customFOV - 90.0f;
             // If useCustomFOV is set to "1", then calculate the vertical FOV using the new aspect ratio, the old aspect ratio, and the desired custom FOV (based on the FOVDifference to offset any oddities).
-            FOV = round((2.0f * atan(((aspectRatio) / (16.0f / 9.0f)) * tan(((originalFOV * 10000.0f) + FOVDifference) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
+            FOV = round((2.0f * atan(((aspectRatio >= originalAspectRatio ? originalAspectRatio : aspectRatio) / (originalAspectRatio)) * tan(((originalFOV * 10000.0f) + FOVDifference) / 2.0f * ((float)M_PI / 180.0f)))) * (180.0f / (float)M_PI) * 100.0f) / 100.0f / 10000.0f;
             break;
         }
     }
