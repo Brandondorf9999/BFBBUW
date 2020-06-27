@@ -76,8 +76,8 @@ void readConfig()
 void fovCalc()
 {
     // Declare the vertical and horizontal resolution variables.
-    int hRes = *(int*)((intptr_t)baseModule + 0x31D9E88); // Grabs Horizontal Resolution integer.
-    int vRes = *(int*)((intptr_t)baseModule + 0x31D9E8C); // Grabs Vertical Resolution integer.
+    int hRes = *(int*)((intptr_t)baseModule + 0x316A338); // Grabs Horizontal Resolution integer.
+    int vRes = *(int*)((intptr_t)baseModule + 0x316A33C); // Grabs Vertical Resolution integer.
 
     // Convert the int values to floats, so then we can determine the aspect ratio.
     float aspectRatio = (float)hRes / (float)vRes;
@@ -107,12 +107,12 @@ void fovCalc()
 void uncapFPS() //Uncaps the framerate.
 {
 	//Writes the new t.MaxFPS cap to memory, alongside pointer.
-	*(float*)(*((intptr_t*)((intptr_t)baseModule + 0x034881D0)) + 0x0) = (float)tMaxFPS;
+	*(float*)(*((intptr_t*)((intptr_t)baseModule + 0x03416F50)) + 0x0) = (float)tMaxFPS;
 }
 
 void resolutionCheck()
 {
-    if (aspectRatio != (*(int*)((intptr_t)baseModule + 0x31D9E88) / *(int*)((intptr_t)baseModule + 0x31D9E8C)))
+    if (aspectRatio != (*(int*)((intptr_t)baseModule + 0x316A338) / *(int*)((intptr_t)baseModule + 0x316A33C)))
     {
         fovCalc();
     }
