@@ -120,7 +120,7 @@ void resolutionCheck()
 
 void framerateCheck()
 {
-	if (tMaxFPS != *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x034881D0)) + 0x0))
+	if (tMaxFPS != *(float*)(*((intptr_t*)((intptr_t)baseModule + 0x03416F50)) + 0x0))
 	{
 		uncapFPS();
 	}
